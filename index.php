@@ -1,5 +1,5 @@
 <?php
-    echo "Bat nandito kang punygfiosgfhahfas ka?";
+    echo "nice nakapasok ka na";
 
 
 ?>
