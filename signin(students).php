@@ -22,9 +22,13 @@
 
         <div class="signin-description1">
           <h2 class="title">Sign In</h2>
+          
+          <form action="login.php" method="POST">
           <input class="signin-studnumber" type="email" placeholder="Email Address">
           <input class="signin-password" type="password" placeholder="Password">
-          <a href="/Event Management System/events.php" target="_self">Sign In</a>
+          <input type="submit" name="sign_in" value="Sign in">
+          </form>
+          
           <div class="sigin-images-align">
             <img class="signin-images" src="/Event Management System/images/gc-logo.png" alt="gc-logo">
             <img class="signin-images" src="/Event Management System/images/gc-ccs.png" alt="gc-logo-css">
