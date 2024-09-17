@@ -1,4 +1,5 @@
 <?php
-//admin dashboard
+//admin dashboardd
     echo "hello admin";
+
 ?>
