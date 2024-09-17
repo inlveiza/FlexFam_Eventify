@@ -1,6 +1,9 @@
 <?php
     session_start();
 
+    $show_warning = isset($_SESSION["show_warning"]) ? $_SESSION["show_warning"] : false;
+    unset($_SESSION["show_warning"]);
+
     require("db.php");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -41,7 +44,16 @@
     }
 } 
 ?>
-
+<head>
+    //for pop-up warning
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            <?php if ($show_warning): ?>
+                alert("You must log in first before accessing our webpage.");
+            <?php endif; ?>
+        });
+    </script>
+</head>
 
 <html>
     <body>
