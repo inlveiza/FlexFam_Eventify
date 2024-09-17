@@ -31,7 +31,7 @@
             else{
             header('Location:userdashboard.php'); //or wherever user dashboard is
             }
-            
+            exit();
        }
        else {
         echo '<script>

@@ -1,13 +1,15 @@
 <?php
     session_start();
+    include("db.php");
     if (!isset($_SESSION["isAuth"])) {
         header("Location: login.php");
         exit();
     }
-    if (!$is_admin){
+    if (!$_SESSION['is_admin']){
         header("Location: userdashboard.php");
         exit();
     }
+    
 ?>
 <!DOCTYPE html>
 <html lang="en">
