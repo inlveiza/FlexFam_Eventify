@@ -24,8 +24,8 @@
           <h2 class="title">Sign In</h2>
           
           <form action="login.php" method="POST">
-          <input class="signin-studnumber" type="email" placeholder="Email Address">
-          <input class="signin-password" type="password" placeholder="Password">
+          <input class="signin-studnumber" type="email" name="email" placeholder="Email Address">
+          <input class="signin-password" type="password" name="password" placeholder="Password">
           <input type="submit" name="sign_in" value="Sign in">
           </form>
           

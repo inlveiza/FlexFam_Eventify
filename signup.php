@@ -1,14 +1,14 @@
 <?php 
- include("db.php");
+ require("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email=$_POST["email"];
-    $password=$_POST["password"];
-    $Fname=$_POST["Fname"];
-    $Lname=$_POST["Lname"];
-    $Program=$_POST["Program"];
-    $Year   =$_POST["Year"];
-    $Block  = $_POST["Block"];
+    $email    = trim($_POST["email"]);
+    $password = trim($_POST["password"]);
+    $Fname    = trim($_POST["Fname"]);
+    $Lname    = trim($_POST["Lname"]);
+    $Program  = trim($_POST["Program"]);
+    $Year     = trim($_POST["Year"]);
+    $Block    = trim($_POST["Block"]);
 
  $sql = "SELECT user_acc FROM user_table WHERE user_acc = ?";
  $stmt = $conn->prepare($sql);
@@ -34,8 +34,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Error".$conn->error;
     }
     }
-}
     $stmt->close();
     $ins_stmt->close();
     $conn->close();
+}
 ?>
+<html>
+    <body>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+        <input type="email" name="email" placeholder="email"><br>
+        <input type="password" name="password" placeholder="password"><br>
+        <input type="text" name="Fname" placeholder="First Name"><br>
+        <input type="text" name="Lname" placeholder="Last Name"><br>
+        <input type="text" name="Program" placeholder="Program"><br>
+        <input type="number" name="Year" placeholder="Year"><br>
+        <input type="text" name="Block" placeholder="Block"><br>
+        <input type="submit" name="sign_up" value="Sign up">
+    </form>
+    </body>
+</html>

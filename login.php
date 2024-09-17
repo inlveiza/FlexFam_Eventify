@@ -1,7 +1,7 @@
 <?php
     session_start();
 
-    include("db.php");
+    require("db.php");
 
     if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
@@ -20,22 +20,35 @@
         $stmt->bind_result($hashed_password,$is_admin);
         $stmt->fetch();
        if (password_verify($password, $hashed_password)){
-            //header("Location:admin.php");
             
             $_SESSION['user_acc'] = $user_acc;
             $_SESSION['is_admin'] = $is_admin;
+            $_SESSION['isAuth'] = true;
 
             if ($is_admin){
-            header('Location:admin.php');
+            header('Location:admindashboard.php'); //or wherever admin dashboard is
             }
             else{
-            header('Location:user.php');
+            header('Location:userdashboard.php'); //or wherever user dashboard is
             }
+            
        }
-    else {
+       else {
         echo '<script>
-        window.location.href = "signin(students).php";
+        window.location.href = "login.php";
         alert("Login Failed. Invalid email or password")
         </script>';
     }
+} 
 ?>
+
+
+<html>
+    <body>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="POST">
+          <input class="signin-studnumber" type="email" name="email" placeholder="Email Address">
+          <input class="signin-password" type="password" name="password" placeholder="Password">
+          <input type="submit" name="sign_in" value="Sign in">
+          </form>
+    </body>
+</html>
