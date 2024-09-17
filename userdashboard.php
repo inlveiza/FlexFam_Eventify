@@ -1,10 +1,13 @@
-<?php
-    session_start();
-    if (!isset($_SESSION["isAuth"])) {
-        header("Location: login.php");
-        exit();
-    }
+<?php 
+session_start();
+
+if (!isset($_SESSION["isAuth"])) {
+    $_SESSION["show_warning"] = true;
+    header("Location: login.php");
+    exit();
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
