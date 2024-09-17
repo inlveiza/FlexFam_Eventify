@@ -1,5 +1,7 @@
-<?php  
- require("db.php");
+<?php   
+require("db.php");
+
+$valid_programs = array("BSIT", "BSCS", "BSEMC", "ACT");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email    = trim($_POST["email"]);
@@ -12,10 +14,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     if (empty($email) || empty($password) || empty($Fname) || empty($Lname) || empty($Program) || empty($Year) || empty($Block)) {
         echo "All fields are required. Please fill out the form completely.";
-    } else {
+    } 
+    else if (!in_array($Program, $valid_programs)) { 
+        echo "Invalid program. Please select a valid program.";
+    } 
+    else if (!preg_match("/^[A-F]$/", $Block)) {
+        echo "Invalid block. Please enter a block from A to F.";
+    } 
+    else if (!filter_var($Year, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 4]])) {
+        echo "Invalid year. Please enter a year between 1 and 4.";
+    } 
+    else {
         $sql = "SELECT user_acc FROM user_table WHERE user_acc = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_Param("s", $email);
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
 
@@ -30,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $ins_stmt->bind_param("sssssis", $email, $hash_password, $Fname, $Lname, $Program, $Year, $Block);
 
             if($ins_stmt->execute()) {
-                header("Location: login.php");
+                header("Location: login.php"); //direct sa sign in page after magsign up
                 exit(); 
             } else {
                 echo "Error: " . $conn->error;
@@ -43,16 +55,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 ?>
 <html>
-    <body>
+<head>
+    <style>
+        input[type="text"], input[type="email"], input[type="password"], input[type="number"] {
+            width: 300px; 
+            padding: 10px; 
+            margin: 5px 0; 
+            box-sizing: border-box; 
+        }
+    </style>
+</head>
+<body>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <input type="email" name="email" placeholder="Email"><br>
         <input type="password" name="password" placeholder="Password"><br>
         <input type="text" name="Fname" placeholder="First Name"><br>
         <input type="text" name="Lname" placeholder="Last Name"><br>
         <input type="text" name="Program" placeholder="Program"><br>
-        <input type="number" name="Year" placeholder="Year"><br>
-        <input type="text" name="Block" placeholder="Block"><br>
+        <input type="number" name="Year" placeholder="Year" min="1" max="4"><br>
+        <input type="text" name="Block" placeholder="Block (A-F)"><br>
         <input type="submit" name="sign_up" value="Sign Up">
     </form>
-    </body>
+</body>
 </html>
