@@ -1,7 +1,13 @@
 <?php   
 require("db.php");
 
-$valid_programs = array("BSIT", "BSCS", "BSEMC", "ACT");
+$valid_programs = array("BSIT");
+$blocks_peryear = [
+    1 => ["A", "B", "C", "D", "E", "F"],      
+    2 => ["A", "B", "C", "D", "E"],      
+    3 => ["A", "B", "C"],           
+    4 => ["A", "B"]            
+];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email    = trim($_POST["email"]);
@@ -18,11 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else if (!in_array($Program, $valid_programs)) { 
         echo "Invalid program. Please select a valid program.";
     } 
-    else if (!preg_match("/^[A-F]$/", $Block)) {
-        echo "Invalid block. Please enter a block from A to F.";
-    } 
     else if (!filter_var($Year, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 4]])) {
         echo "Invalid year. Please enter a year between 1 and 4.";
+    } 
+    else if (!in_array($Block, $blocks_peryear[$Year])) {
+        echo "Invalid block for the selected year. Please choose a valid block.";
     } 
     else {
         $sql = "SELECT user_acc FROM user_table WHERE user_acc = ?";
@@ -65,6 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     </style>
 </head>
+
 <body>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
         <input type="email" name="email" placeholder="Email"><br>
@@ -73,7 +80,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <input type="text" name="Lname" placeholder="Last Name"><br>
         <input type="text" name="Program" placeholder="Program"><br>
         <input type="number" name="Year" placeholder="Year" min="1" max="4"><br>
-        <input type="text" name="Block" placeholder="Block (A-F)"><br>
+        <input type="text" name="Block" placeholder="Block"><br>
         <input type="submit" name="sign_up" value="Sign Up">
     </form>
 </body>
