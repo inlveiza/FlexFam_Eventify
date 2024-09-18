@@ -3,10 +3,10 @@ require("db.php");
 
 $valid_programs = array("BSIT");
 $blocks_peryear = [
-    1 => ["A", "B", "C", "D", "E", "F"],      
-    2 => ["A", "B", "C", "D", "E"],      
-    3 => ["A", "B", "C"],           
-    4 => ["A", "B"]            
+    1 => ["A", "B", "C", "D", "E", "F", "a", "b", "c", "d", "e", "f"],      
+    2 => ["A", "B", "C", "D", "E", "a", "b", "c", "d", "e"],      
+    3 => ["A", "B", "C", "a", "b", "c"],           
+    4 => ["A", "B", "a", "b"]            
 ];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -48,7 +48,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $ins_stmt->bind_param("sssssis", $email, $hash_password, $Fname, $Lname, $Program, $Year, $Block);
 
             if($ins_stmt->execute()) {
-                header("Location: login.php"); //direct sa sign in page after magsign up
+                echo 
+                "<script>
+                    alert('Sign-up complete! You can now log in.');
+                    window.location.href = 'login.php'; 
+                </script>";
                 exit(); 
             } else {
                 echo "Error: " . $conn->error;
