@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/css files/registrationform.css">
+  <link rel="stylesheet" href="registrationform.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <title>Eventify - Events Page</title>
 
-  </style>
 </head>
 <body>
 
   <div class="light-green"></div>
+
   <!--Header-->
 <header>
-
 <div class="sidebar">
   <div class="top">
     <div class="logo">
@@ -32,7 +31,6 @@
         <i class='bx bxs-home-alt-2' ></i>
         <span class="nav-item">Home</span>
       </a>
-
     </li>
 
     <li>
@@ -47,7 +45,6 @@
         <i class='bx bxs-calendar-event' ></i>
         <span class="nav-item">Events</span>
       </a>
-
     </li>
 
     <li>
@@ -55,72 +52,80 @@
         <i class='bx bx-child' ></i>
         <span class="nav-item">Profile</span>
       </a>
-
     </li>
-    
+   
     <li>
       <a href="#">
         <i class='bx bxs-log-out' ></i>
         <span class="nav-item">Logout</span>
       </a>
-
     </li>
+
   </ul>
 </div>
-
 </header>
 
-<!-- UPCOMING EVENTS SECTION -->
 
+<!-- UPCOMING EVENTS SECTION -->
   <section>
     <div class="events-section">
       <h1 class="events-title">Registration Form</h1>
       <hr class="events-line">
     </div>
 
+
         <div class="registration-container">
           <div class="registration-glasscard">
             <p class="registration-desc">Please fill all of the requried chuchu form</p>
           </div>
-          
+         
           <div class="test">
-            <form class="separation">
+            <form class="separation" id="form1">
               <h2 class="glasscard-fname">Full Name</h2>
-              <input type="text" required>
+              <input type="text" id="fullname" required>
+              <span class="error-message" id="fullname-error"></span>
+
               <h2 class="glasscard-program">Program</h2>
-              <input  type="text" required>
+              <input  type="text" id="program" required>
+              <span class="error-message" id="program-error"></span>
+
               <h2 class="glasscard-nameevent">Name of Event</h2>
-              <select class="glasscard-select" required>
-                <option value="event">Event 1</option>
-                <option value="event">Event 1</option>
-                <option value="event">Event 1</option>
+              <select class="glasscard-select" id="nameEvent" required>
+                <option value="event">Seminar: IT Code</option>
+                <option value="event">CCS WEEK 2024</option>
+                <option value="event">Seminar: BSEMC</option>
               </select>
-  
+              <span class="error-message" id="nameEvent-error"></span>
+ 
               <h2 class="glasscard-starttime">Event Start time</h2>
-              <input type="time" class="glasscard-inputtime" required>
+              <input type="time" id="startTime" class="glasscard-inputtime" required>
+              <span class="error-message" id="startTime-error"></span>
             </form>
 
-            <form class="separation">
+            <form class="separation" id="form2">
               <h2 class="glasscard-email">Email Address</h2>
-              <input class="glasscard-inputemail" type="email" required>
-  
+              <input class="glasscard-inputemail" type="email" id="email" required>
+              <span class="error-message" id="email-error"></span>
+
               <h2 class="glasscard-yearlevel">Year level</h2>
-              <input class="glasscard-inputyearlevel" type="text" required>
-  
+              <input class="glasscard-inputyearlevel" type="text" id="year" required>
+              <span class="error-message" id="year-error"></span>
+
               <h2 class="glasscard-dateevent">Date of event</h2>
-              <input class="glasscard-inputdateevent" type="date" required> 
-  
+              <input class="glasscard-inputdateevent" type="date" id="dateEvent" required>
+              <span class="error-message" id="dateEvent-error"></span>
+
               <h2 class="glasscard-finishtime">Event finish time</h2>
-              <input class="glasscard-inputfinishtime" type="time" required>
+              <input class="glasscard-inputfinishtime" type="time" id="finishTime" required>
+              <span class="error-message" id="finishTime-error"></span>
             </form>
-            
           </div>
 
-          <input type="submit" value="Register" class="glasscard-button">
-          
+          <input type="button" id="registerBtn" value="Register" class="glasscard-button">
+
          <!-- POPUP MODAL FORM -->
           <span class="overlay"></span>
-            <div class="modal-box">
+            <div class="modal-box" id="modal">
               <i class='bx bx-check-circle' id="check"></i>
               <h2>Completed</h2>
               <h3>You have sucessfully registered!</h3>
@@ -129,10 +134,9 @@
               </div>
             </div>
         </div>
-
+  </section>
 
 </body>
-<script src="/Event Management System/events.js"></script>
 <script src="modal.js"></script>
-</html>  
+</html> 
         
