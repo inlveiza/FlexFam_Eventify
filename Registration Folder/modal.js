@@ -176,20 +176,20 @@ function hideModal() {
   overlay.addEventListener("click", hideModal);
   function resetFormFields() {
     fnameInput.value = '';
-    ProgramInput.value = '';
+    programInput.value = '';
     nameEventInput.value = '';
     startTimeInput.value = '';
     emailInput.value = '';
-    YearInput.value = '';
+    yearInput.value = '';
     dateEventInput.value = '';
     finishTimeInput.value = '';
 
     fnameError.textContent = '';
-    ProgramError.textContent = '';
+    programError.textContent = '';
     nameEventError.textContent = '';
     startTimeError.textContent = '';
     emailError.textContent = '';
-    YearError.textContent = '';
+    yearError.textContent = '';
     dateEventError.textContent = '';
     finishTimeError.textContent = '';
 }
