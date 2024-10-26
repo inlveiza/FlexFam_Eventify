@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css admin files/addusers.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>Eventify - Audience Report</title>
+</head>
+<body>
+  
+  <div class="light-green"></div>
+  <!--Header-->
+<header>
+
+<div class="sidebar">
+  <div class="top">
+    <div class="logo">
+      <i class="bx bxl-codeopen"></i>
+      <span class="title-name">Eventify</span>
+    </div>
+    <i class="bx bx-menu" id="btn"></i>
+  </div>
+  <ul>
+    <li> 
+      <a href="home.html">
+        <i class='bx bxs-home-alt-2' ></i>
+        <span class="nav-item"> List</span>
+      </a>
+
+    </li>
+
+    <li>
+      <a href="about.html">
+        <i class='bx bx-question-mark' ></i>
+        <span class="nav-item"> Report</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="events.html">
+        <i class='bx bxs-calendar-event' ></i>
+        <span class="nav-item">Create</span>
+      </a>
+
+    </li>
+
+    <li>
+      <a href="#">
+        <i class='bx bx-child' ></i>
+        <span class="nav-item">Users</span>
+      </a>
+ 
+    </li>
+    
+    <li>
+      <a href="#">
+        <i class='bx bxs-log-out' ></i>
+        <span class="nav-item">Logout</span>
+      </a> 
+
+    </li>
+  </ul>
+</div>
+
+</header>
+
+ <!-- USERS SECTION -->
+<section>
+  <div class="users-container">
+    <h2 class="users-title">Add users</h2>
+    <hr class="users-line"> 
+    <button class="users-new">New Users</button> <!-- PAG KA PINDOT, MAY POPUP MODAL FORM THAT CAN ENTRY NEW USERS SA PAG CREATE NG EVENT -->
+
+    <!-- POPUP MODAL FORM -->
+     <span class="overlay"></span>
+     <div class="modal-form">
+      <h3 class="modal-title">Admin Information Form</h3>
+      <div class="modal-separation">
+        <p class="modal-name">Name:</p>
+        <input type="text" class="modal-input-name" id="name" required>
+        <p class="modal-username">Username:</p>
+        <input type="text" class="modal-input-users" id="username" required>
+        <p class="modal-password">Password:</p>
+        <input type="password" required class="modal-input-password" id="password">
+      </div>
+      <div class="modal-buttons">
+        <input type="submit" value="Save" class="modal-button-save" required>
+        <input type="submit" value="Cancel" class="modal-button-cancel" required>
+      </div>
+     </div>
+
+     <!-- AFTER MAKAPAG REGISTERED NI USER, I ISTORE NYA NA UNG DATA SA TABLE NG DB -->
+
+    <div class="table-container">
+      <div class="search-separation">
+        <p class="table-title-search">Search: </p>
+        <input type="text" placeholder="Search" class="table-search">
+      </div>
+
+      <div class="test10">
+        <table class="users-table">
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Username</th>
+          </tr>
+  
+          <tr> 
+            <td>1</td>
+            <td>Bogart</td>
+            <td>admin</td>
+          </tr>
+  
+          <tr> 
+            <td>2</td>
+            <td>Bogart</td>
+            <td>admin</td>
+          </tr>
+  
+          <tr> 
+            <td>3</td>
+            <td>Bogart</td>
+            <td>admin</td>
+          </tr>
+  
+          <tr> 
+            <td>4</td>
+            <td>Bogart</td>
+            <td>admin</td>
+          </tr>
+        </table>
+      </div>
+    
+    </div>
+  </div>
+</section>
+</body>
+
+<script src="js files/events.js"></script>
+<script src="js files/user-modal.js"></script>
+</html>
