@@ -1,0 +1,204 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css admin files/evententreis.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>Eventify - Audience Report</title>
+</head>
+<body>
+  
+  <div class="light-green"></div>
+  <!--Header-->
+<header>
+
+<div class="sidebar">
+  <div class="top">
+    <div class="logo">
+      <i class="bx bxl-codeopen"></i>
+      <span class="title-name">Eventify</span>
+    </div>
+    <i class="bx bx-menu" id="btn"></i>
+  </div>
+  <ul>
+    <li>
+      <a href="home.html">
+        <i class='bx bxs-home-alt-2' ></i>
+        <span class="nav-item"> List</span>
+      </a>
+
+    </li>
+
+    <li>
+      <a href="about.html">
+        <i class='bx bx-question-mark' ></i>
+        <span class="nav-item"> Report</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="events.html">
+        <i class='bx bxs-calendar-event' ></i>
+        <span class="nav-item">Create</span>
+      </a>
+
+    </li>
+
+    <li>
+      <a href="#">
+        <i class='bx bx-child' ></i>
+        <span class="nav-item">Users</span>
+      </a>
+
+    </li>
+    
+    <li>
+      <a href="#">
+        <i class='bx bxs-log-out' ></i>
+        <span class="nav-item">Logout</span>
+      </a>
+
+    </li>
+  </ul>
+</div>
+
+</header>
+
+<!-- ENTRIES LIST SECTION -->
+<div class="entries-container">
+  <div class="entries-desc">
+    <h2 class="entries-title">Event Entries List</h2>
+    <hr class="entries-line">
+    <div class="button-container">
+      <button class="entries-button">New Entry</button>
+    </div>
+  </div>
+
+  <!--POPUP MODAL FORM-->
+  <section>
+  <span class="overlay"></span>
+     <div class="modal-form">
+      <h3 class="modal-title">New Entry</h3>
+      <div class="modal-separation">
+        <p class="modal-name">Event:</p>
+        <input type="text" class="modal-input-name" id="name" required>
+        <p class="modal-username">Resource Speaker:</p>
+        <input type="text" class="modal-input-users" id="username" required>
+        <p class="modal-password">Date/Time:</p>
+        <input type="datetime" required class="modal-input-password" id="password">
+        <p class="modal-password">Venue:</p>
+        <input type="text" required class="modal-input-password" id="venue">
+        <p class="modal-password">Choose a image:</p>
+        <input type="file" required class="modal-input-file" id="image">
+        <p class="modal-password">Short Description:</p>
+        <textarea name="myTextarea" class="modal-textarea" id="textarea"></textarea>
+      </div>
+      <div class="modal-buttons">
+        <input type="submit" value="Save" class="modal-button-save" required>
+        <input type="submit" value="Cancel" class="modal-button-cancel" required>
+      </div>
+     </div>
+    </section>
+
+  <div class="container">
+    <div class="entries-sample">
+      <p class="entries-subtitle">Search: </p>
+      <input class="entries-input" type="text" placeholder="Search">
+    </div>
+
+    <div class="test10">
+      <table class="users-table">
+        <tr>
+          <th>#</th>
+          <th>Event Information</th>
+          <th>Resource Speaker</th>
+          <th>Action</th>
+        </tr>
+  
+        <tr>  
+          <td>1</td>
+          <td>Name of event: <br>
+          Time/Date <br>
+          Venue: <br>
+         </td>
+          <td> <div class="test2">
+                <p>Dominik Betita</p>
+              </div>
+          </td>
+          <td>
+            <div class="test">
+              <button class="entries-edit">Edit</button> <br> <!-- will modify the information mismo sa table -->
+              <button class="entries-delete">Delete</button></td> <!-- will delete with no popup -->
+            </div>
+          </td>
+        </tr>
+  
+        <tr>  
+          <td>1</td>
+          <td>Name of event: <br>
+          Time/Date <br>
+          Venue: <br>
+         </td>
+          <td> <div class="test2">
+                <p>Dominik Betita</p>
+              </div>
+          </td>
+          <td>
+            <div class="test">
+              <button class="entries-edit">Edit</button> <br>
+              <button class="entries-delete">Delete</button></td>
+            </div>
+          </td>
+        </tr>
+  
+        <tr>  
+          <td>1</td>
+          <td>Name of event: <br>
+          Time/Date <br>
+          Venue: <br>
+         </td>
+          <td> <div class="test2">
+                <p>Dominik Betita</p>
+              </div>
+          </td>
+          <td>
+            <div class="test">
+              <button class="entries-edit">Edit</button> <br>
+              <button class="entries-delete">Delete</button></td>
+            </div>
+          </td>
+        </tr>
+
+         <tr>  
+          <td>1</td>
+          <td>Name of event: <br>
+          Time/Date <br>
+          Venue: <br>
+         </td>
+          <td> <div class="test2">
+                <p>Dominik Betita</p>
+              </div>
+          </td>
+          <td>
+            <div class="test">
+              <button class="entries-edit">Edit</button> <br>
+              <button class="entries-delete">Delete</button></td>
+            </div>
+          </td>
+        </tr>   
+      </table>
+    </div>
+    
+  </div>
+
+</div>
+</body>
+<script src="js files/events.js"></script>
+<script src="js files/entrieslist-modal.js"></script>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout Modal</title>
+    <link rel="stylesheet" href="css files/logout.css">
+</head>
+<body>
+
+    <!-- Button to open the modal -->
+    <button id="logoutButton" class="open-modal-btn">Logout</button>
+
+    <!-- The Modal -->
+    <div id="logoutModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Are you sure you want to logout?</h2>
+            <form id="logoutForm" action="/logout" method="POST">
+                <button type="submit" class="logout-btn">Yes, Logout</button>
+                <button type="button" class="cancel-btn" id="cancelLogout">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js files/logout.js"></script>
+</body>
+</html>

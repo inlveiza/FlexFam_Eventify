@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="css admin files/audience report.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+  <title>Eventify - Audience Report</title>
+</head>
+<body>
+  
+  <div class="light-green"></div>
+  <!--Header-->
+<header>
+
+<div class="sidebar">
+  <div class="top">
+    <div class="logo">
+      <i class="bx bxl-codeopen"></i>
+      <span class="title-name">Eventify</span>
+    </div>
+    <i class="bx bx-menu" id="btn"></i>
+  </div>
+  <ul>
+    <li>
+      <a href="home.html">
+        <i class='bx bxs-home-alt-2' ></i>
+        <span class="nav-item"> List</span>
+      </a>
+
+    </li>
+
+    <li>
+      <a href="about.html">
+        <i class='bx bx-question-mark' ></i>
+        <span class="nav-item"> Report</span>
+      </a>
+    </li>
+
+    <li>
+      <a href="events.html">
+        <i class='bx bxs-calendar-event' ></i>
+        <span class="nav-item">Create</span>
+      </a>
+
+    </li>
+
+    <li>
+      <a href="#">
+        <i class='bx bx-child' ></i>
+        <span class="nav-item">Users</span>
+      </a>
+
+    </li>
+    
+    <li>
+      <a href="#">
+        <i class='bx bxs-log-out' ></i>
+        <span class="nav-item">Logout</span>
+      </a>
+
+    </li>
+  </ul>
+</div>
+
+</header>
+
+<!-- Event Audience report -->
+
+  <div class="audience-container">
+    <h2 class="audience-title">Event Audience Report</h2>
+    <hr class="audience-line">
+    <div class="container">
+      <div class="audience-container-sample">
+        <p class="event-subtitle">Event</p>
+          <select class="event-select" required>
+            <option value="event">Event 1</option>
+            <option value="event">Event 1</option>
+            <option value="event">Event 1</option>
+          </select>
+          <button class="event-filter">Filter</button>
+        <hr class="line">
+
+        <div class="test10">
+          <table class="report-table">
+
+            <!-- sample data -->
+            <tr> 
+              <th>#</th>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Year Level</th>
+              <th>Event</th>
+            </tr>
+  
+            <tr>
+              <td>1</td>
+              <td>Roland Mendel</td>
+              <td>Austria</td>
+              <td>Austria</td>
+              <td>Austria</td>
+            </tr>
+  
+            
+            <tr>
+              <td>2</td>
+              <td>Roland Mendel</td>
+              <td>Austria</td>
+              <td>Austria</td>
+              <td>Austria</td>
+            </tr>
+  
+            <tr>
+              <td>3</td>
+              <td>Roland Mendel</td>
+              <td>Austria</td>
+              <td>Austria</td>
+              <td>Austria</td>
+            </tr>
+            </table>
+        </div>
+       
+      </div>    
+    </div>
+  </div>
+
+</body>
+
+<script src="js files/events.js"></script>
+</html>
