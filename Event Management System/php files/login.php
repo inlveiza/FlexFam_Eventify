@@ -11,7 +11,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
     $email = $_POST["email"];
     $password = $_POST["password"];
 
-    $sql = "SELECT password, is_admin FROM user_table WHERE user_acc=?";
+    $sql = "SELECT password, is_admin FROM users WHERE user_acc=?";
     $stmt = $conn->prepare($sql);
 
     if ($stmt === false) {

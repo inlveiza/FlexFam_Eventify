@@ -30,38 +30,61 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else if (!in_array($Block, $blocks_peryear[$Year])) {
         echo "Invalid block for the selected year. Please choose a valid block.";
     } 
-    else {
-        $sql = "SELECT user_acc FROM user_table WHERE user_acc = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
+    else {	
+      	try{
+            $sql = "SELECT user_acc FROM users WHERE user_acc = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("s", $email);
+            $stmt->execute();
+            $stmt->store_result();
 
-        if($stmt->num_rows > 0) {
-            echo "Email already registered";
-        } else {
-            $hash_password = password_hash($password, PASSWORD_DEFAULT);
-
-            $ins_sql = "INSERT INTO user_table (user_acc, password, Fname, Lname, Program, Year, Block)
-                        VALUES(?,?,?,?,?,?,?)";
-            $ins_stmt = $conn->prepare($ins_sql);
-            $ins_stmt->bind_param("sssssis", $email, $hash_password, $Fname, $Lname, $Program, $Year, $Block);
-
-            if($ins_stmt->execute()) {
-                echo 
-                "<script>
-                    alert('Sign-up complete! You can now log in.');
-                    window.location.href = 'login.php'; 
-                </script>";
-                exit(); 
-            } else {
-                echo "Error: " . $conn->error;
+              if($stmt->num_rows > 0) {
+                  echo "Email already registered";
+              } else {
+                  $hash_password = password_hash($password, PASSWORD_DEFAULT);
+            
+                  $conn->begin_transaction();
+                  
+                  $ins_sql2 = "INSERT INTO users (user_acc, password) VALUES (?,?)";
+                  $ins_stmt2 = $conn->prepare($ins_sql2);
+                  $ins_stmt2->bind_param("ss",$email, $hash_password);
+                     if(!$ins_stmt2->execute()){
+                   	  throw new Exception("Failed to insert user");
+                     }
+                     
+                  $user_id = $conn->insert_id;
+                  
+                  $ins_sql1 = "INSERT INTO profiles (user_id, first_name, last_name, program, year, block) VALUES(?,?,?,?,?,?)";
+                  $ins_stmt1 = $conn->prepare($ins_sql1);
+                  $ins_stmt1->bind_param("isssis", $user_id, $Fname, $Lname, $Program, $Year, $Block);
+                     if(!$ins_stmt1->execute()){
+                   	  throw new Exception("Failed to insert profile");
+                     }
+                     
+     
+              $conn->commit();
+              
+                  echo 
+                  "<script>
+                      alert('Sign-up complete! You can now log in.');
+                      window.location.href = 'login.php'; 
+                  </script>";
+             }
+             
+                $stmt->close();
+                 if(isset($ins_stmt1)) $ins_stmt1->close();
+                 if(isset($ins_stmt2)) $ins_stmt2->close();
+                
+            } catch (Exception $e) {
+            	$conn->rollback();
+                echo "<script>
+                           alert('Sign-up Failed ".$e->getMessage()."');
+                           </script>";
+                           
+            } finally {
+                 $conn->close();
             }
         }
-        $stmt->close();
-        $ins_stmt->close();
-    }
-    $conn->close();
 }
 ?>
 
