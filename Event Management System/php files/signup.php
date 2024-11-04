@@ -76,7 +76,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                  if(isset($ins_stmt2)) $ins_stmt2->close();
                 
             } catch (Exception $e) {
-            	$conn->rollback();
+            	$conn->rollBack();
                 echo "<script>
                            alert('Sign-up Failed ".$e->getMessage()."');
                            </script>";

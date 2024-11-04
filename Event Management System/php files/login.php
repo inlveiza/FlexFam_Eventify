@@ -1,6 +1,5 @@
 <?php
 session_start();
-
 $show_warning = isset($_SESSION["show_warning"]) ? $_SESSION["show_warning"] : false;
 unset($_SESSION["show_warning"]);
 
@@ -8,7 +7,7 @@ require("db.php");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST"){
 
-    $email = $_POST["email"];
+    $user_acc = $_POST["email"];
     $password = $_POST["password"];
 
     $sql = "SELECT password, is_admin FROM users WHERE user_acc=?";
@@ -18,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         die('Prepare failed: ' . $conn->error);
     }
 
-    $stmt->bind_param("s", $email);
+    $stmt->bind_param("s", $user_acc);
     $stmt->execute();
     $stmt->bind_result($hashed_password, $is_admin);
     $stmt->fetch();
@@ -29,9 +28,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         $_SESSION['isAuth'] = true;
 
         if ($is_admin) {
-            header('Location: ../entrieslist.html'); //or wherever admin dashboard is
+            header('Location: admindashboard.php'); //or wherever admin dashboard is
         } else {
-            header('Location: ../events.php'); //or wherever user dashboard is
+            header('Location: userdashboard.php'); //or wherever user dashboard is
         }
         exit();
     } else {
@@ -54,7 +53,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST"){
         });
     </script>
 </head>
-<?php include("db.php"); ?>
 
 <!DOCTYPE html>
 <html lang="en">
