@@ -6,12 +6,21 @@ class GlobalMethods implements GlobalInterface{
      public function responsePayload($payload,$remarks,$message,$code){
          $status = array("remarks" => $remarks, "message" => $message);
          http_response_code($code);
-         return array ("status" => $status, "payload"=> $payload,"timestamp" => date_create(), "prepared_by" => "Aaron Jan Estacio");
+         
+         $response = array( 
+              "status" => $status, 
+              "payload"=> $payload,
+              "timestamp" => date('Y-m-d H:i:s'),
+              "prepared_by" => "ur mom"
+           );
+           
+         echo json_encode($response);
+         exit;
       }
      public function notFound(){
          echo json_encode ([
             "msg" => "Your endpoint does not exist"
          ]);
-         http_response_code(403);
+         http_response_code(404);
       }
 }

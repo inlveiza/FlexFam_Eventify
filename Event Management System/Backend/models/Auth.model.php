@@ -15,29 +15,34 @@ class Auth {
 		$this->gm = $gm;
 	}
 	
-	public function login($data){
-		$sql = "SELECT * FROM " . $this->table_name1. " WHERE user_acc=?";
-		
-		try{
-			$stmt = $this->pdo->prepare($sql);			
-			$stmt->execute([$data->user_acc]);
-			if ($stmt->rowCount() > 0){
-				$res = $stmt->fetch(); 
-				if ($this->checkPassword($data->password, $res['password'])){
-					$token = $this->tokenGen();
-					
-					return $this->gm->responsePayload(array("token" => $token), "Success", "Login Successful", 200);
-				} else {
-					return $this->gm->responsePayload(null, "Failed", "Failed to Login, Username and Password does not match", 400);
-				}
-			} else {
-				return $this->gm->responsePayload(null, "Failed", "Account does not Exist", 404);
-			}				
-		}catch(\PDOException $e){
-			echo "Error: ".$e->getMessage();
-			return $this->gm->responsePayload(null,"Failed", "An error occured",500);
-		}
-	}
+	public function login($data) {
+    $sql = "SELECT * FROM " . $this->table_name1 . " WHERE user_acc=?";
+    
+    try {
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([$data->user_acc]);
+        
+        if ($stmt->rowCount() > 0) {
+            $res = $stmt->fetch(); 
+            if ($this->checkPassword($data->password, $res['password'])) {
+                $tokenData = [
+                    'user_id' => $res['user_id'], // include user ID in the token data
+                    'user_acc' => $res['user_acc']
+                ];
+                $token = $this->tokenGen($tokenData);
+                
+                return $this->gm->responsePayload($token, "Success", "Login Successful", 200);
+            } else {
+                return $this->gm->responsePayload(null, "Failed", "Invalid username or password", 401);
+            }
+        } else {
+            return $this->gm->responsePayload(null, "Failed", "Account does not exist", 404);
+        }
+    } catch (\PDOException $e) {
+        return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
+    }
+}
+
 	
 	public function register($data){
 	     $valid_programs = array("BSIT");
@@ -55,6 +60,7 @@ class Auth {
           if (!in_array($data->program, $valid_programs)) { 
                $errors[] = "Invalid program. Please select a valid program.";
           } 
+          //NOT WORKING PROPERLY
           if (!filter_var($data->year, FILTER_VALIDATE_INT, ["options" => ["min_range" => 1, "max_range" => 4]])) {
                $errors[] = "Invalid year. Please enter a year between 1 and 4.";
           } 
@@ -96,28 +102,31 @@ class Auth {
 		}
 	}
 	
-	public function logout(){
-		$token_check = $this->verifyToken();
-		if($token_check["is_valid"]){
-			$jwt = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
-			
-			if($jwt[0]  !== 'Bearer'){
-				return $this->gm->responsePayload(null, "Failed", "You are Not Authorized. Please login first", 403);
-			} else {
-				$decoded = explode(".", $jwt[1]);
-				$payload = json_decode(base64_decode($decoded[1]));
-				
-				$sql = "INSERT INTO " . $this->table_name3 . "(token, expiry) VALUES (?,?)";
-				$stmt = $this->pdo->prepare($sql);
-				$expiry = date("Y-m-d H:i:s", $payload->exp);
-				$stmt->execute([$jwt[1],$expiry]);
-				
-				return $this->gm->responsePayload(null,"Success","Successfully Logged Out",200);
-			}
-		} else {
-			return $this->gm->responsePayload(null, "Failed", "You are Not Authorized. Please login first", 403);
-		}
-	}
+	public function logout() {
+        $token_check = $this->verifyToken();
+    
+         if ($token_check["is_valid"]) {
+              // Get the JWT from the Authorization header
+             $jwt = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
+        
+              if (count($jwt) !== 2 || $jwt[0] !== 'Bearer') {
+                  return $this->gm->responsePayload(null, "Failed", "You are not authorized. Please log in first.", 403);
+              }
+        
+              $decoded = explode(".", $jwt[1]);
+              $payload = json_decode(base64_decode($decoded[1]));
+        
+              $sql = "INSERT INTO " . $this->table_name3 . " (token, expiry) VALUES (?, ?)";
+              $stmt = $this->pdo->prepare($sql);
+              $expiry = date("Y-m-d H:i:s", $payload->exp);
+              $stmt->execute([$jwt[1], $expiry]);
+        
+               return $this->gm->responsePayload(null, "Success", "Successfully logged out", 200);
+           } else {
+               return $this->gm->responsePayload(null, "Failed", "You are not authorized. Please log in first.", 403);
+           }
+    }
+
 	
 	public function checkPassword($password, $db_password){
 		return $db_password === crypt($password,$db_password);
