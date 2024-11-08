@@ -13,6 +13,7 @@ if (!empty($req)) {
             $response = $auth->logout();
             echo json_encode($response);
             break;
+        
         default:
             // Sending a JSON error response without any output before it
             http_response_code(404); // Not Found

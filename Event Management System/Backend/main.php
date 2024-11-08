@@ -10,7 +10,9 @@ set_time_limit(1000);
 
 // Directory of files
 $rootPath = $_SERVER["DOCUMENT_ROOT"];
-$apiPath = $rootPath . "/Backend";
+//CHANGE ACCORDING TO WHERE THE BACKEND FOLDER IS LOCATED IN htdocs!!
+$apiPath = $rootPath . "/FlexFam_Eventify/Event Management System/Backend/";
+
 
 // Connects the database
 require_once($apiPath . '/configs/dbconn.php');
@@ -24,6 +26,7 @@ $pdo = $db->connect();
 // Model instantiation
 $gm = new GlobalMethods();
 $auth = new Auth($pdo, $gm);
+//$try = new Example($pdo,$gm);
 
 // Request URL used to test API
 $req = [];
@@ -40,14 +43,15 @@ error_log("Request data: " . json_encode(file_get_contents("php://input")));
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         // Implement GET logic if needed
-        echo json_encode(array("message" => "GET method is not implemented."));
-        http_response_code(405); // Method Not Allowed
-        break;
+       // echo json_encode(array("message" => "GET method is not implemented."));
+       // http_response_code(405); // Method Not Allowed
+      break;
 
     case 'POST':
         $data_input = json_decode(file_get_contents("php://input"));
 
         require_once($apiPath . '/routes/Auth.routes.php');
+        //require_once($apiPath . '/routes/try.routes.php');
         break;
 
     default:

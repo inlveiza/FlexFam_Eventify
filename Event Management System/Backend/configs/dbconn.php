@@ -4,7 +4,7 @@ define("SERVER", "localhost");
 define("DBASE", "eventify");
 define("USER", "root");
 define("PASSWORD", "");
-define("SECRET_KEY", "B4rb1eL4T");
+define("SECRET_KEY", "B4rb13LaT");
 
 class Connection {
     public $pdo;
