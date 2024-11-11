@@ -1,6 +1,6 @@
 <?php
 
-require_once($apiPath. '/interface/Global.php');
+require_once($apiPath. '/interface/Global.interface.php');
 
 class GlobalMethods implements GlobalInterface{
      public function responsePayload($payload,$remarks,$message,$code){
@@ -11,7 +11,7 @@ class GlobalMethods implements GlobalInterface{
               "status" => $status, 
               "payload"=> $payload,
               "timestamp" => date('Y-m-d H:i:s'),
-              "prepared_by" => "ur mom"
+              "prepared_by" => "Aaron Jan" 
            );
            
          echo json_encode($response);

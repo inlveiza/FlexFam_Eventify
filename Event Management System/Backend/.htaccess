@@ -5,3 +5,4 @@
     RewriteRule ^(.*)$ main.php?request=$1 [L,QSA]
     RewriteRule .* - [e=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
+

@@ -1,10 +1,19 @@
 <?php
 
-header("Access-Control-Allow-Origin: *");
-header("Content-Type: application/json; charset=utf-8");
-header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
-header("Access-Control-Allow-Headers: X-Requested-With, Origin, Content-Type, Authorization");
-header("Access-Control-Max-Age: 86400");
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
+    header('Access-Control-Allow-Headers: token, Content-Type, Authorization');
+    header('Access-Control-Max-Age: 1728000');
+    header('Content-Length: 0');
+    header('Content-Type: text/plain');
+    set_time_limit(1000);
+    die();
+}
+
+header('Access-Control-Allow-Origin: *');
+header('Content-Type: application/json');
+
 date_default_timezone_set("Asia/Manila");
 set_time_limit(1000);
 
@@ -26,6 +35,12 @@ $pdo = $db->connect();
 // Model instantiation
 $gm = new GlobalMethods();
 $auth = new Auth($pdo, $gm);
+
+$middleware = new Middleware($auth);
+
+$user = new User($pdo,$gm,$middleware);
+
+
 //$try = new Example($pdo,$gm);
 
 // Request URL used to test API
@@ -45,6 +60,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
         // Implement GET logic if needed
        // echo json_encode(array("message" => "GET method is not implemented."));
        // http_response_code(405); // Method Not Allowed
+       
+        if($req[0] == 'try'){
+            if(empty($req[1])) {echo json_encode($user->getAll()); return ;}
+            return;
+        } //User functionality test
+        
       break;
 
     case 'POST':
