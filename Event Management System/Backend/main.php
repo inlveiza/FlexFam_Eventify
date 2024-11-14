@@ -61,10 +61,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
        // echo json_encode(array("message" => "GET method is not implemented."));
        // http_response_code(405); // Method Not Allowed
        
-        if($req[0] == 'try'){
-            if(empty($req[1])) {echo json_encode($user->getAll()); return ;}
-            return;
-        } //User functionality test
+      if($req[0] == 'try'){
+           if(empty($req[1])) {echo json_encode($user->getAll()); return ;}
+           return;
+       } //User functionality test
         
       break;
 

@@ -17,7 +17,7 @@ class User implements UserInterface{
 	public function getAll(){
 		if(!$this->md->isAuth()) return $this->gm->responsePayload(null, "Failed", "Invalid Login, Please login first", 403);
 			
-		$sql = "SELECT * FROM " . $this->table1;
+		$sql = "SELECT id, email_acc FROM " . $this->table1;
 		
 		$stmt = $this->pdo->prepare($sql);
 		try{

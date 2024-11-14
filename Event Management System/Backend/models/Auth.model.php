@@ -164,20 +164,6 @@ class Auth implements AuthInterface{
               $updatestmt = $this->pdo->prepare($updatesql);
               $updatestmt->execute([$payload->tokenData->id]);
 
-        // Check if the row was affected
-              if ($updatestmt->rowCount() === 0) {
-                  return $this->gm->responsePayload(null, "Failed", "Token has already been invalidated", 403);
-              }
-
-        // Blacklist the token only if it's not already blacklisted
-              $blacklistsql = "SELECT * FROM " . $this->table_name3 . " WHERE token = ?";
-              $blacklist_stmt = $this->pdo->prepare($blacklistsql);
-              $blacklist_stmt->execute([$token]);
-
-              if ($blacklist_stmt->rowCount() > 0) {
-                   return $this->gm->responsePayload(null, "Failed", "Token has already been invalidated", 403);
-              }
-
         // Insert the token into the blacklist
               $expiry = date("Y-m-d H:i:s", $payload->exp);
               $sql = "INSERT INTO " . $this->table_name3 . " (token, expiry) VALUES (?, ?)";
@@ -248,6 +234,15 @@ class Auth implements AuthInterface{
 		} else {
 			$decoded = explode(".", $jwt[1]);
 			$payload = json_decode(str_replace(['+','/','='],['-','_',''], base64_decode($decoded[1])));
+			
+			// Blacklist the token only if it's not blacklisted
+              $blacklistsql = "SELECT * FROM " . $this->table_name3 . " WHERE token = ?";
+              $blacklist_stmt = $this->pdo->prepare($blacklistsql);
+              $blacklist_stmt->execute([$jwt[1]]);
+
+              if ($blacklist_stmt->rowCount() > 0) {
+                   return $this->tokenPayload(null);
+              }
 			
 			$signature = hash_hmac('sha256', $decoded[0] . "." . $decoded[1], SECRET_KEY, true);
 		    $b64UrlSignature = str_replace(['+','/','='],['-','_',''], base64_encode($signature));

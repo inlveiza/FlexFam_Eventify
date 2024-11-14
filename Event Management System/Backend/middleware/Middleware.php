@@ -3,7 +3,7 @@
 class Middleware {
 	
 	protected $auth;
-	
+	//protected $headers;
 	public function __construct (Auth $auth){
 		//$this->headers = apache_request_headers();
 		$this->auth = $auth;
