@@ -5,18 +5,20 @@
         public function insert($data);
         public function update($id, $data);
         public function delete($data);
+        public function Authorization();
     }
 
     class Example implements IEXample
     {
         
-        protected $pdo, $global;
+        protected $pdo, $gm, $md;
         protected $table_name = "users";
 
         
-        public function __construct(\PDO $pdo, GlobalMethods $gm){
+        public function __construct(\PDO $pdo, GlobalMethods $gm, Middleware $middleware){
             $this->pdo = $pdo;
             $this->gm = $gm;
+            $this->md = $middleware;
             }
         
 
@@ -112,4 +114,10 @@
                 echo $e->getMessage();
             }
         }
+        
+        public function Authorization(){
+        	if($this->md->Authorization()) return $this->gm->responsePayload(null, "Success", "You're an admin", 200);
+		    if(!$this->md->Authorization()) return $this->gm->responsePayload(null, "Success", "You're a user", 200);
+       }
+       
     }

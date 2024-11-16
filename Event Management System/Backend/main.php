@@ -36,14 +36,16 @@ $pdo = $db->connect();
 $gm = new GlobalMethods();
 $auth = new Auth($pdo, $gm);
 
-$middleware = new Middleware($auth);
+$middleware = new Middleware($gm, $auth);
 
+$try = new Example($pdo, $gm, $middleware);
 $user = new User($pdo,$gm,$middleware);
+$admin = new Admin($pdo, $gm, $middleware);
 
 
 //$try = new Example($pdo,$gm);
 
-// Request URL used to test API
+// Request endpoint used to test API
 $req = [];
 if (isset($_REQUEST['request'])) {
     $req = explode('/', rtrim($_REQUEST['request'], '/'));
@@ -61,18 +63,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
        // echo json_encode(array("message" => "GET method is not implemented."));
        // http_response_code(405); // Method Not Allowed
        
-      if($req[0] == 'try'){
-           if(empty($req[1])) {echo json_encode($user->getAll()); return ;}
+      if($req[0] == 'validation'){
+           if(empty($req[1])) {echo json_encode($try->Authorization()); return ;}
            return;
-       } //User functionality test
+       } //Admin functionality test
         
       break;
 
     case 'POST':
         $data_input = json_decode(file_get_contents("php://input"));
 
-        require_once($apiPath . '/routes/Auth.routes.php');
-        //require_once($apiPath . '/routes/try.routes.php');
+       require_once($apiPath . '/routes/Auth.routes.php');
+        require_once($apiPath . '/routes/Admin.routes.php');
+        
+        http_response_code(404); // Not Found
+        echo json_encode(array("error" => "No valid endpoint specified"));
         break;
 
     default:
