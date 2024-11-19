@@ -7,6 +7,7 @@ class User implements UserInterface{
 	
 	protected $table1 = 'accounts';
 	protected $table2 = 'profiles';
+	protected $table3 = 'events';
 	
 	public function __construct(\PDO $pdo, GlobalMethods $gm, Middleware $middleware){
 		$this->pdo = $pdo;
@@ -15,7 +16,7 @@ class User implements UserInterface{
 	}
 	
 	public function getAll(){
-		if(!$this->md->isAuth()) return $this->gm->responsePayload(null, "Failed", "Invalid Login, Please login first", 403);
+		if(!$this->md->isAuthenticated()) return $this->gm->responsePayload(null, "Failed", "Invalid Login, Please login first", 403);
 			
 		$sql = "SELECT id, email_acc FROM " . $this->table1;
 		
@@ -33,15 +34,29 @@ class User implements UserInterface{
 		} catch (\PDOException $e) {
 			echo $e->getMessage();
 		}
-		
 	}
 	
-	public function try(){
-		if(!$this->md->isAuth()) {
-           return $this->gm->responsePayload(null, "Failed", "Invalid Token", 403);
-        } else {
-        	return $this->gm->responsePayload(null, "Success", "Valid token", 200);
-        }
+	public function EventTime($event){
+		if(!$this->md->isAuthenticated()) return $this->gm->responsePayload(null, "Failed", "Invalid Login, Please login first", 403);
+		
+		try{
+		  $sql = "SELECT event_name, event_date, event_start_time, event_end_time FROM " . $this->table3 . " WHERE event_name=?";
+		  $stmt = $this->pdo->prepare($sql);
+	      if($stmt->execute([$event->event_name])){
+		   	$event = $stmt->fetchAll();
+			
+			   if (!empty($event)){
+				    return $this->gm->responsePayload($event, "Success", "Event schedule", 200);
+		   	} else {
+				    return $this->gm->responsePayload(null, "Failed", "No Event Found", 404);
+		   	}
+	       }
+		} catch (\PDOException $e) {
+			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
+		}
+		
+		
+		
 	}
 	
 }

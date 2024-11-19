@@ -14,13 +14,49 @@ class Admin implements AdminInterface{
 	
 	public function AddEvent($data){
 		if ($this->md->Authorization()){
+			$data = (object) $_POST;
 			$errors = [];
+			if(empty($data->event_name) || empty($data->event_date) || empty($data->event_start_time) || empty($data->event_end_time) || empty($data->event_status) || empty($data->event_description) || empty($data->resource_speaker)){
+				$errors[]= "All fields required. Please fill up all fields";
+			}
 			
-			if($data->event_start_time >= $data->event_end_time){
+			if(strtotime($data->event_start_time) >= strtotime($data->event_end_time)){
 				$errors[] = "Invalid time schedule. Please fix your time schedule";
 			}
 			
+			if(strtotime($data->event_date) < time()){
+				$errors[] = "Invalid date. The input date has already passed.";
+			}
+			
+			$image_name = null;
+			if(isset($_FILES['event_image']) && $_FILES['event_image']['error'] === UPLOAD_ERR_OK){
+				$allowed_ext = ['jpg','jpeg','png'];
+				$file_ext = pathinfo($_FILES['event_image']['name'], PATHINFO_EXTENSION);
+				
+				if(!in_array(strtolower($file_ext), $allowed_ext)){
+					$errors[] = "Invalid Image File Type. Only JPG, JPEG and PNG file types are accepted";
+				} else {
+					$upload_dir = __DIR__ . '/../uploads/';
+					if(!is_dir($upload_dir)){
+						mkdir($upload_dir, 0755, TRUE);
+					}
+					
+					$image_name = uniqid() . '.' . $file_ext;
+					$upload_path = $upload_dir . $image_name;
+					
+					if(!move_uploaded_file($_FILES['event_image']['tmp_name'], $upload_path)){
+						$errors[]="Failed to upload image.";
+						$image_name=null;
+					}
+				}
+			} else {
+				$errors[] = "Image for event is required";
+			}
+			
 			if(!empty($errors)){
+				if($image_name){
+					unlink($upload_dir . $image_name);
+				}
 				return $this->gm->responsePayload(null, "Failed", implode(" ", $errors), 400);
 			}
 			  
@@ -30,16 +66,22 @@ class Admin implements AdminInterface{
 			    $checkstmt->execute([$data->event_name]);
 			
 			    if($checkstmt->rowCount()>0){
+				    if($image_name){
+					    unlink($upload_dir . $image_name);
+				    }
 				    return $this->gm->responsePayload(null, "Failed", "A similar event name has already been added.", 400); 
 			    }
-			        $insertsql = "INSERT INTO " .$this->table1." (event_name, event_date, event_start_time, event_end_time, event_status, event_description) VALUES (?,?,?,?,?,?)";
+			        $insertsql = "INSERT INTO " .$this->table1." (event_name, event_date, event_start_time, event_end_time, event_status, event_description, resource_speaker, event_image) VALUES (?,?,?,?,?,?,?,?)";
 			        $insertstmt = $this->pdo->prepare($insertsql);
-			        $insertstmt->execute([$data->event_name, $data->event_date, $data->event_start_time, $data->event_end_time, $data->event_status, $data->event_description]);
+			        $insertstmt->execute([$data->event_name, $data->event_date, $data->event_start_time, $data->event_end_time, $data->event_status, $data->event_description, $data->resource_speaker, $image_name]);
 			
 			        return $this->gm->responsePayload(null, "Success", "Event Successfully Added",200);
 			
 			} catch (\PDOException $e) {
 				echo "Failed to Add Event ".$e->getMessage();
+				if($image_name){
+					    unlink($upload_dir . $image_name);
+				}
 			    return $this->gm->responsePayload(null,  "Failed", "Couldn't Add Event", 400);
 			}
 		} else {

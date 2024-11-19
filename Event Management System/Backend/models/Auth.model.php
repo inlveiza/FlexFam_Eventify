@@ -140,8 +140,7 @@ class Auth implements AuthInterface{
 			}
 		} catch (\PDOException $e) {
 			$this->pdo->rollBack();
-			echo "Failed to Register ".$e->getMessage();
-			return $this->gm->responsePayload(null,  "Failed","Couldn't Register User",400);
+			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
 		}
 	}
 	

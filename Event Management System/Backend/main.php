@@ -35,6 +35,7 @@ $pdo = $db->connect();
 // Model instantiation
 $gm = new GlobalMethods();
 $auth = new Auth($pdo, $gm);
+$display = new Display($pdo, $gm);
 
 $middleware = new Middleware($gm, $auth);
 
@@ -59,21 +60,23 @@ error_log("Request data: " . json_encode(file_get_contents("php://input")));
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        // Implement GET logic if needed
-       // echo json_encode(array("message" => "GET method is not implemented."));
-       // http_response_code(405); // Method Not Allowed
+        require_once($apiPath . '/routes/Display.routes.php');
        
       if($req[0] == 'validation'){
            if(empty($req[1])) {echo json_encode($try->Authorization()); return ;}
            return;
        } //Admin functionality test
-        
+       
+        http_response_code(404); // Not Found
+        echo json_encode(array("error" => "No valid endpoint specified"));
+        break;
       break;
 
     case 'POST':
         $data_input = json_decode(file_get_contents("php://input"));
 
-       require_once($apiPath . '/routes/Auth.routes.php');
+        require_once($apiPath . '/routes/Auth.routes.php');
+        require_once($apiPath . '/routes/User.routes.php');
         require_once($apiPath . '/routes/Admin.routes.php');
         
         http_response_code(404); // Not Found
