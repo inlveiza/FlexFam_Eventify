@@ -14,7 +14,7 @@ class Display implements DisplayInterface{
 	
 	public function EventDisplay(){
 		try{
-			$sql = "SELECT event_name, event_date, event_start_time, event_end_time, event_status, event_description, resource_speaker, event_image FROM ".$this->table1." ORDER BY `".$this->table1."`.`event_date` ASC";
+			$sql = "SELECT * FROM ".$this->table1." ORDER BY `".$this->table1."`.`event_date` ASC";
 			$stmt = $this->pdo->prepare($sql);
 			$stmt->execute();
 			$display = $stmt->fetchAll();
