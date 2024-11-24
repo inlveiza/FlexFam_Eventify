@@ -65,9 +65,9 @@ class Admin implements AdminInterface{
 			}
 			  
 			try {
-			    $checksql = "SELECT * FROM " .$this->table1. " WHERE event_name = ? OR venue = ?";
+			    $checksql = "SELECT * FROM " .$this->table1. " WHERE (event_name = ? AND event_date = ?) OR (venue = ? AND event_date = ?)";
 			    $checkstmt = $this->pdo->prepare($checksql);
-			    $checkstmt->execute([$data->event_name, $data->venue]);
+			    $checkstmt->execute([$data->event_name, $data->event_date, $data->venue, $data->event_date]);
 			    $checkres = $checkstmt->fetch();
 			    
 				if($checkres){
@@ -80,12 +80,11 @@ class Admin implements AdminInterface{
 				    }
 				
 				    if($checkres['venue'] === $data->venue && strtotime($checkres['event_date']) === strtotime($data->event_date)){
-					//&& strtotime($checkres['event_start_time'])===strtotime($data->event_start_time)
 			            return $this->gm->responsePayload(null, "Failed", "A venue has already been set on an event on a similar date", 400); 
 				    }
 				}
 			     
-			        $insertsql = "INSERT INTO " .$this->table1." (event_name, event_date, event_start_time, event_end_time, venue , event_description, resource_speaker, event_image) VALUES (?,?,?,?,?,?,?,?)";
+			        $insertsql = "INSERT INTO " .$this->table1." (event_name, event_date, event_start_time, event_end_time, venue, event_description, resource_speaker, event_image) VALUES (?,?,?,?,?,?,?,?)";
 			        $insertstmt = $this->pdo->prepare($insertsql);
 			        $insertstmt->execute([$data->event_name, $data->event_date, $data->event_start_time, $data->event_end_time, $data->venue, $data->event_description, $data->resource_speaker, $image_name]);
 			
@@ -103,8 +102,8 @@ class Admin implements AdminInterface{
 		}
 	}
 	
-	public function UpdateEvent($id,$data){
-		
-	}
+        public function UpdateEvent($id, $data) {
+        
+    }
 	
 }

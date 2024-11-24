@@ -73,7 +73,7 @@ class Auth implements AuthInterface{
                      $updatestmt = $this->pdo->prepare($updatesql);
                      $updatestmt->execute([$token['token'], $res['id']]);
                       
-                      return $this->gm->responsePayload($token, "Success", "Login Successful", 200);
+                      return $this->gm->responsePayload(['token' => $token['token'], 'is_admin' =>$res['is_admin']], "Success", "Login Successful", 200);
                    } else {
                   	return $this->gm->responsePayload(null, "Failed", "Failed to fetch profile details",500);
                    }
@@ -127,7 +127,7 @@ class Auth implements AuthInterface{
 				$this->pdo->beginTransaction();
 				$ins_sql1="INSERT INTO ".$this->table_name1." (email_acc,password) VALUES (?,?)";
 				$ins_stmt1=$this->pdo->prepare($ins_sql1);
-				$ins_stmt1->execute([$data->user_acc, $data->password]);
+				$ins_stmt1->execute([$data->email_acc, $data->password]);
 				
 				$data->id=$this->pdo->lastInsertId();
 				
