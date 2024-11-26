@@ -73,7 +73,7 @@ class Auth implements AuthInterface{
                      $updatestmt = $this->pdo->prepare($updatesql);
                      $updatestmt->execute([$token['token'], $res['id']]);
                       
-                      return $this->gm->responsePayload(['token' => $token['token'], 'is_admin' =>$res['is_admin']], "Success", "Login Successful", 200);
+                      return $this->gm->responsePayload(['token' => $token['token'], 'is_admin' =>$res['is_admin']], "Success", "Login Successful. Hello, ". $profiles['first_name'], 200);
                    } else {
                   	return $this->gm->responsePayload(null, "Failed", "Failed to fetch profile details",500);
                    }

@@ -3,9 +3,9 @@
 class Middleware {
 	
 	protected $gm, $auth;
-	//protected $headers;
+	protected $headers;
 	public function __construct (GlobalMethods $gm, Auth $auth){
-		//$this->headers = apache_request_headers();
+		$this->headers = $_SERVER;
 		$this->gm = $gm;
 		$this->auth = $auth;
 		
@@ -13,8 +13,8 @@ class Middleware {
 	}
 	
 	public function isAuthenticated(){
-		if(isset($_SERVER['HTTP_AUTHORIZATION'])){
-			$data = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
+		if(isset($this->headers['HTTP_AUTHORIZATION'])){
+			$data = explode(' ', $this->headers['HTTP_AUTHORIZATION']);
 			
 			if($data[0] !== 'Bearer'){
                 return false;
@@ -32,7 +32,7 @@ class Middleware {
 	
 	public function Authorization(){
 		if($this->isAuthenticated()){
-			$data = explode(' ',$_SERVER['HTTP_AUTHORIZATION']);
+			$data = explode(' ',$this->headers['HTTP_AUTHORIZATION']);
 			$decoded = explode('.', $data[1]);
 			$tokenData = json_decode(base64_decode($decoded[1]));
 			

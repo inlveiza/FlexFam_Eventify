@@ -5,6 +5,7 @@ require_once($apiPath.'/interface/Admin.interface.php');
 class Admin implements AdminInterface{
 	protected $pdo, $gm, $md;
 	protected $table1 = 'events';
+	protected $table2 = 'accounts';
 	
 	public function __construct(\PDO $pdo, GlobalMethods $gm, Middleware $middleware){
 		$this->pdo = $pdo;
@@ -102,8 +103,38 @@ class Admin implements AdminInterface{
 		}
 	}
 	
-        public function UpdateEvent($id, $data) {
+    public function UpdateEvent($id, $data) {
         
     }
+	
+	public function GrantAdmin($id){
+		if($this->md->Authorization()){
+		     try{
+		     	$checksql = "SELECT * FROM ".$this->table2." WHERE id = ?";
+	     		$checkstmt = $this->pdo->prepare($checksql);
+		     	$checkstmt->execute([$id]);
+		         $checkres = $checkstmt->fetch();
+			
+	     		if($checkres){
+		             if(!$checkres['is_admin']){
+						$updatesql = "UPDATE ".$this->table2. " SET is_admin = 1 WHERE id = ?";
+						$updatestmt = $this->pdo->prepare($updatesql);
+						$updatestmt->execute([$id]);
+						
+						return $this->gm->responsePayload(null, "Success", $checkres['email_acc']." is successfully turned into admin.", 200);
+					} else {
+						return $this->gm->responsePayload(null, "Failed", "This account is already an admin", 400);
+					}
+		     	} else {
+	    		 	return $this->gm->responsePayload(null, "Failed", "The account id does not exist", 404);
+	     		}
+		     } catch (\PDOException $e) {
+			    echo "Failed to grant admin priviledge: " .$e->getMessage();
+				return $this->gm->responsePayload(null, "Failed", "Failed to grant admin priviledge. Something went wrong", 403);
+		     }
+		} else {
+			return $this->gm->responsePayload(null, "Failed", "You are not authorized to perform this function", 403);
+		}
+	}
 	
 }
