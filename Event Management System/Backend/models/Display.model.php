@@ -6,6 +6,8 @@ class Display implements DisplayInterface{
 	protected $pdo, $gm;
 	protected $table1 = 'events';
 	protected $table2 = 'registration';
+	protected $table3 = 'profiles';
+	protected $table4 = 'accounts';
 	
 	public function __construct(\PDO $pdo, GlobalMethods $gm){
 		$this->pdo = $pdo;
@@ -24,7 +26,7 @@ class Display implements DisplayInterface{
 			
 			if (!empty($display)){
 				$current_time = time();
-				$upload_dir = 'http://localhost:8080/FlexFam_Eventify/Event%20Management%20System/Backend/uploads/';
+				$upload_dir = 'http://localhost/Event Management System/eventify_backend/uploads/';
 				foreach($display as &$event){
 					$event['image_url'] = $upload_dir . $event['event_image'];
 				}
@@ -36,5 +38,33 @@ class Display implements DisplayInterface{
 		} catch (\PDOException $e){
 			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
 		}
+	}
+	
+	public function AudienceReport(){
+		try{
+			$reportsql = "
+				SELECT
+					r.user_id, r.event_id,
+					p.first_name, p.last_name, p.year, p.block,
+					e.event_name, a.email_acc
+				FROM ".$this->table2." r
+				JOIN ".$this->table3." p ON r.user_id = p.id
+				JOIN ".$this->table1." e ON r.event_id = e.event_id
+				JOIN ".$this->table4." a ON r.user_id = a.id
+			";
+			$reportstmt = $this->pdo->prepare($reportsql);
+			$reportstmt->execute();
+			
+			if($reportstmt->rowCount() === 0){
+				return $this->gm->responsePayload(null, "Failed", "No registrations found", 400);
+			}
+			
+			$registrations = $reportstmt->fetchAll();
+			
+			return $this->gm->responsePayload($registrations, "Success", "Audience Reports", 200);
+			
+		} catch (\PDOException $e){
+			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
+		} 
 	}
 }

@@ -1,5 +1,10 @@
 <?php
    if($req[0] == 'displayevent'){
    	$response = $display->EventDisplay();
-        echo json_encode($response);
+       echo json_encode($response);
+   }
+   
+   if($req[0] == 'reports'){
+   	$response = $display->AudienceReport();
+       echo json_encode($response);
    }
