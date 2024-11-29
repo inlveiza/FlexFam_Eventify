@@ -16,8 +16,10 @@ class Display implements DisplayInterface{
 	
 	public function EventDisplay(){
 		try{
+			
 			$updatesql = "UPDATE ".$this->table1." SET is_archived = 1 WHERE event_date < CURDATE() AND is_archived = 0";
-			$this->pdo->prepare($updatesql)->execute();
+			$updatestmt = $this->pdo->prepare($updatesql);
+			$updatestmt->execute();
 			
 			$sql = "SELECT * FROM ".$this->table1." WHERE is_archived = 0 ORDER BY `".$this->table1."`.`event_date` ASC";
 			$stmt = $this->pdo->prepare($sql);
@@ -38,6 +40,23 @@ class Display implements DisplayInterface{
 		} catch (\PDOException $e){
 			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
 		}
+	}
+	
+	public function ProfileDisplay(){
+		try{
+			$headers = apache_request_headers();
+			if(isset($headers['Authorization'])){
+				$jwt = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
+				$decoded = explode('.', $jwt[1]);
+				$ehh = json_decode(base64_decode($decoded[1]));
+				
+				return $this->gm->responsePayload($ehh, "Success", "Profile", 200);
+			} else {
+				return $this->gm->responsePayload(null, "Failed", "Unsuccesful", 400);
+			}
+		} catch (\PDOException $e){
+			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
+		} 
 	}
 	
 	public function AudienceReport(){

@@ -14,8 +14,8 @@ class User implements UserInterface{
 		$this->pdo = $pdo;
 		$this->gm = $gm;
 		$this->md = $middleware;
-		$this->headers = apache_request_headers();
-		//$this->headers = $_SERVER;
+		//$this->headers = apache_request_headers();
+		$this->headers = $_SERVER;
 	}
 	
 	public function getAll(){
@@ -62,8 +62,8 @@ class User implements UserInterface{
 	public function EventRegister($data){
 		if(!$this->md->Authorization()){
 			try{
-				//$authData = explode(' ',$this->headers['HTTP_AUTHORIZATION']);
-				$authData = explode(' ',$this->headers['Authorization']);
+				$authData = explode(' ',$this->headers['HTTP_AUTHORIZATION']);
+				//$authData = explode(' ',$this->headers['Authorization']);
 				$decoded = explode('.', $authData[1]);
 				$tokenData = json_decode(base64_decode($decoded[1]));
 				

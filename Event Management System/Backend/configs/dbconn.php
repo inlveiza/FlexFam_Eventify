@@ -12,8 +12,8 @@ class Connection {
     public function connect() {
         $this->pdo = null;
         try {
-        	$this->pdo = new \PDO("mysql:host=" . SERVER . ";dbname=" . DBASE, USER, PASSWORD);
-            //$this->pdo = new \PDO("mysql:unix_socket=/data/data/com.termux/files/usr/var/run/mysqld/mysqld.sock;dbname=" . DBASE, USER, PASSWORD);
+        	//$this->pdo = new \PDO("mysql:host=" . SERVER . ";dbname=" . DBASE, USER, PASSWORD);
+            $this->pdo = new \PDO("mysql:unix_socket=/data/data/com.termux/files/usr/var/run/mysqld/mysqld.sock;dbname=" . DBASE, USER, PASSWORD);
             $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
             $this->pdo->setAttribute(\PDO::ATTR_DEFAULT_FETCH_MODE, \PDO::FETCH_ASSOC);
             
