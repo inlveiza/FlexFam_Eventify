@@ -44,13 +44,14 @@ class Display implements DisplayInterface{
 	
 	public function ProfileDisplay(){
 		try{
-			$headers = apache_request_headers();
-			if(isset($headers['Authorization'])){
+			//$headers = apache_request_headers();
+			if(isset($_SERVER['HTTP_AUTHORIZATION'])){
 				$jwt = explode(' ', $_SERVER['HTTP_AUTHORIZATION']);
 				$decoded = explode('.', $jwt[1]);
-				$ehh = json_decode(base64_decode($decoded[1]));
+				$payload = json_decode(base64_decode($decoded[1]));
+				$profile = $payload->tokenData;
 				
-				return $this->gm->responsePayload($ehh, "Success", "Profile", 200);
+				return $this->gm->responsePayload($profile, "Success", "Profile", 200);
 			} else {
 				return $this->gm->responsePayload(null, "Failed", "Unsuccesful", 400);
 			}
