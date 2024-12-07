@@ -11,3 +11,7 @@
    	$response = $display->AudienceReport();
        echo json_encode($response);
    }
+   if($req[0] == 'users'){
+   	$response = $display->FetchUsers();
+	   echo json_encode($response);
+   }

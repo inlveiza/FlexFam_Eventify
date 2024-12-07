@@ -64,8 +64,8 @@ class Display implements DisplayInterface{
 		try{
 			$reportsql = "
 				SELECT
-					r.user_id, r.event_id,
-					p.first_name, p.last_name, p.year, p.block,
+					r.registration_id, r.user_id, r.event_id,
+					p.first_name, p.last_name,p.program, p.year, p.block,
 					e.event_name, a.email_acc
 				FROM ".$this->table2." r
 				JOIN ".$this->table3." p ON r.user_id = p.id
@@ -86,5 +86,30 @@ class Display implements DisplayInterface{
 		} catch (\PDOException $e){
 			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
 		} 
+	}
+	
+	public function FetchUsers(){
+		try{
+			$sql = "
+			
+				SELECT ".$this->table4.".id, first_name, last_name,
+				email_acc
+				FROM ".$this->table4."
+				INNER JOIN ".$this->table3." ON ".$this->table3.".id = ".$this->table4.".id
+				WHERE ".$this->table4.".is_admin=0
+				";
+			$stmt = $this->pdo->prepare($sql);
+			$stmt->execute();
+			
+			if($stmt->rowCount() === 0){
+				return $this->gm->responsePayload(null, "Failed", "No registrations found", 400);
+			}
+			
+			$users = $stmt->fetchAll();
+			
+			return $this->gm->responsePayload($users, "Success", "Audience Reports", 200);
+		} catch (\PDOException $e) {
+			return $this->gm->responsePayload(null, "Failed", "An error occurred: " . $e->getMessage(), 500);
+		}
 	}
 }
