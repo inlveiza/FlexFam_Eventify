@@ -104,9 +104,9 @@ class Admin implements AdminInterface{
 	}
 	
 	public function UpdateEvent($id, $data) {
-		if ($this->md->Authorization()) {
-			$data = (object) $data; 
-			$errors = [];
+			if ($this->md->Authorization()) {
+				$data = (object) $data; 
+				$errors = [];
 	
 			if (isset($data->event_start_time) && !strtotime($data->event_start_time)) {
 				$errors[] = "Invalid time format for event_start_time. Use hh:mm 24-hour format.";
@@ -142,37 +142,37 @@ class Admin implements AdminInterface{
 	
 			// Checking for overlapping or duplicate events (same date, time range, and venue, case-insensitive)
 			if (isset($data->event_date, $data->event_start_time, $data->event_end_time, $data->venue)) {
-    		$checkConflictSql = "SELECT COUNT(*) as count 
-                FROM " . $this->table1 . " 
-                WHERE event_date = ? 
-                AND LOWER(venue) = LOWER(?) 
-        	    AND (
-                (event_start_time < ? AND event_end_time > ?) OR  -- Overlap in time range
-                (event_start_time = ? AND event_end_time = ?)     -- Exact duplicate in time
-                ) 
-                AND event_id != ?"; 
+    			$checkConflictSql = "SELECT COUNT(*) as count 
+                	FROM " . $this->table1 . " 
+                	WHERE event_date = ? 
+                	AND LOWER(venue) = LOWER(?) 
+        	    	AND (
+                	(event_start_time < ? AND event_end_time > ?) OR  -- Overlap in time range
+                	(event_start_time = ? AND event_end_time = ?)     -- Exact duplicate in time
+                	) 
+                	AND event_id != ?"; 
 
-    		$checkConflictStmt = $this->pdo->prepare($checkConflictSql);
-    		$checkConflictStmt->execute([
-        	$data->event_date,
-        	$data->venue,
-        	$data->event_end_time,  
-        	$data->event_start_time, 
-        	$data->event_start_time, 
-        	$data->event_end_time,   
-        	$id
-    		]);
-    		$conflictCount = $checkConflictStmt->fetch(PDO::FETCH_ASSOC)['count'];
+    			$checkConflictStmt = $this->pdo->prepare($checkConflictSql);
+    			$checkConflictStmt->execute([
+        		$data->event_date,
+        		$data->venue,
+        		$data->event_end_time,  
+        		$data->event_start_time, 
+        		$data->event_start_time, 
+        		$data->event_end_time,   
+        		$id
+    			]);
+    			$conflictCount = $checkConflictStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-    		if ($conflictCount > 0) {
-        	return $this->gm->responsePayload(
+    			if ($conflictCount > 0) {
+        		return $this->gm->responsePayload(
             null, 
             "Failed", 
             "This event conflicts with another event. Please change the schedule or venue.", 
             400
-        	);
-    	}
-	}
+        		);
+    		}
+		}
 
 				$updateFields = [];
 				$params = [];
@@ -260,3 +260,4 @@ class Admin implements AdminInterface{
 	}
 	
 }
+
