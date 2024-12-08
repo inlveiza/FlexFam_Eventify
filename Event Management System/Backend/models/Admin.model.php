@@ -103,9 +103,126 @@ class Admin implements AdminInterface{
 		}
 	}
 	
-    public function UpdateEvent($id, $data) {
-        
-    }
+	public function UpdateEvent($id, $data) {
+		if ($this->md->Authorization()) {
+			$data = (object) $data; 
+			$errors = [];
+	
+			if (isset($data->event_start_time) && !strtotime($data->event_start_time)) {
+				$errors[] = "Invalid time format for event_start_time. Use hh:mm 24-hour format.";
+			}
+			if (isset($data->event_end_time) && !strtotime($data->event_end_time)) {
+				$errors[] = "Invalid time format for event_end_time. Use hh:mm 24-hour format.";
+			}
+			if (isset($data->event_start_time, $data->event_end_time) &&
+				strtotime($data->event_start_time) >= strtotime($data->event_end_time)) {
+				$errors[] = "Invalid time schedule: start time must be before end time.";
+			}
+			if (isset($data->event_date) && !strtotime($data->event_date)) {
+				$errors[] = "Invalid date format for event_date. Use YYYY-MM-DD format.";
+			}
+	
+			if (isset($data->event_status) && !in_array($data->event_status, ['Active', 'Cancelled', 'Completed', 'Postponed'])) {
+				$errors[] = "Invalid event status. Allowed values are 'Active', 'Cancelled', 'Completed', or 'Postponed'.";
+			}
+	
+			if (!empty($errors)) {
+				return $this->gm->responsePayload(null, "Failed", implode(" ", $errors), 400);
+			}
+	
+			try {
+				$fetchEventSql = "SELECT * FROM " . $this->table1 . " WHERE event_id = ?";
+				$fetchEventStmt = $this->pdo->prepare($fetchEventSql);
+				$fetchEventStmt->execute([$id]);
+				$existingEvent = $fetchEventStmt->fetch(PDO::FETCH_ASSOC);
+	
+				if (!$existingEvent) {
+					return $this->gm->responsePayload(null, "Failed", "Event not found", 404);
+				}
+	
+				// Checking for overlapping events (same date and time range)
+				if (isset($data->event_date, $data->event_start_time, $data->event_end_time)) {
+					$overlapCheckSql = "SELECT COUNT(*) as count 
+										FROM " . $this->table1 . " 
+										WHERE event_date = ? 
+										AND ((event_start_time < ? AND event_end_time > ?) 
+										OR (event_start_time < ? AND event_end_time > ?)) 
+										AND event_id != ?"; // Exclude the current event
+					$overlapCheckStmt = $this->pdo->prepare($overlapCheckSql);
+					$overlapCheckStmt->execute([
+						$data->event_date,
+						$data->event_start_time,
+						$data->event_start_time,
+						$data->event_end_time,
+						$data->event_end_time,
+						$id  // Exclude the event with this ID from the overlap check
+					]);
+					$overlapCount = $overlapCheckStmt->fetch(PDO::FETCH_ASSOC)['count'];
+	
+					if ($overlapCount > 0) {
+						return $this->gm->responsePayload(
+							null, 
+							"Failed", 
+							"This event is the same with another event. Please change it.", 
+							400
+						);
+					}
+				}
+
+				$updateFields = [];
+				$params = [];
+	
+				if (isset($data->event_name)) {
+					$updateFields[] = "event_name = ?";
+					$params[] = $data->event_name;
+				}
+				if (isset($data->event_date)) {
+					$updateFields[] = "event_date = ?";
+					$params[] = $data->event_date;
+				}
+				if (isset($data->event_start_time)) {
+					$updateFields[] = "event_start_time = ?";
+					$params[] = $data->event_start_time;
+				}
+				if (isset($data->event_end_time)) {
+					$updateFields[] = "event_end_time = ?";
+					$params[] = $data->event_end_time;
+				}
+				if (isset($data->venue)) {
+					$updateFields[] = "venue = ?";
+					$params[] = $data->venue;
+				}
+				if (isset($data->event_description)) {
+					$updateFields[] = "event_description = ?";
+					$params[] = $data->event_description;
+				}
+				if (isset($data->resource_speaker)) {
+					$updateFields[] = "resource_speaker = ?";
+					$params[] = $data->resource_speaker;
+				}
+				if (isset($data->event_status)) {
+					$updateFields[] = "event_status = ?";
+					$params[] = $data->event_status;
+				}
+	
+				if (empty($updateFields)) {
+					return $this->gm->responsePayload(null, "Failed", "No data to update", 400);
+				}
+	
+				$updateFieldsSql = implode(", ", $updateFields);
+				$params[] = $id;
+				$updateSql = "UPDATE " . $this->table1 . " SET $updateFieldsSql WHERE event_id = ?";
+				$updateStmt = $this->pdo->prepare($updateSql);
+				$updateStmt->execute($params);
+	
+				return $this->gm->responsePayload(null, "Success", "Event Successfully Updated", 200);
+			} catch (\PDOException $e) {
+				return $this->gm->responsePayload(null, "Failed", "Couldn't Update Event: " . $e->getMessage(), 500);
+			}
+		} else {
+			return $this->gm->responsePayload(null, "Failed", "You don't have the authorization to update events", 403);
+		}
+	}	
 	
 	public function GrantAdmin($id){
 		if($this->md->Authorization()){
